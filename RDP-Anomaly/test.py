@@ -10,6 +10,7 @@ from rdp_tree import RDPTree
 import numpy as np
 import sys
 from util import dataLoading, aucPerformance, tic_time
+import torch
 
 data_path = "data/apascal.csv"
 
@@ -23,6 +24,9 @@ dropout_r = 0.1
 # count from 1
 testing_methods_set = ['last_layer', 'first_layer', 'level']
 testing_method = 1
+
+if not torch.cuda.is_available():
+    USE_GPU = False
 
 # Set mode
 dev_flag = True

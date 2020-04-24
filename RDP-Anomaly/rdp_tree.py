@@ -5,7 +5,7 @@ RDP Tree class for filter normal samples
 """
 
 
-from model import ADModel
+from model import RDP_Model
 import numpy as np
 import random
 import os
@@ -57,7 +57,7 @@ class RDPTree():
             labels = labels_ori[keep_pos]
             group_num = int(x.shape[0] / batch_size) + 1
             batch_x = np.array_split(x, group_num)
-            model = ADModel(in_c=x.shape[1], out_c=out_c, USE_GPU=USE_GPU,
+            model = RDP_Model(in_c=x.shape[1], out_c=out_c, USE_GPU=USE_GPU,
                             LR=LR, logfile=logfile, dropout_r=dropout_r)
             best_auc = best_epoch = 0
 
@@ -152,7 +152,7 @@ class RDPTree():
             # form x
             keep_pos = np.where(x_level == 0)
             x = x_ori[keep_pos]
-            model = ADModel(in_c=x.shape[1], out_c=out_c, USE_GPU=USE_GPU,
+            model = RDP_Model(in_c=x.shape[1], out_c=out_c, USE_GPU=USE_GPU,
                             dropout_r=dropout_r)
             
             if testing_method == 'last_layer':

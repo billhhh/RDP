@@ -10,6 +10,7 @@ import os
 import sys
 from util import dataLoading, random_list, tic_time
 import time
+import torch
 
 data_path = "data/apascal.csv"
 
@@ -28,6 +29,9 @@ forest_Tnum = 30
 filter_ratio = 0.05  # filter those with high anomaly scores
 dropout_r = 0.1
 random_size = 10000  # randomly choose 1024 size of data for training
+
+if not torch.cuda.is_available():
+    USE_GPU = False
 
 # Set mode
 dev_flag = True

@@ -120,7 +120,7 @@ class RNet(nn.Module):
         return x
 
 
-class ADModel:
+class RDP_Model:
     def __init__(self, in_c, out_c, logfile=None, USE_GPU=False, LR=1e-4, dropout_r=0.2):
         self.r_target_net = RTargetNet(in_c, out_c)
         self.r_net = RNet(in_c, out_c, dropout_r)
@@ -184,15 +184,28 @@ class ADModel:
 
     def eval_model(self, x):
         self.r_net.eval()
+        x_random = copy.deepcopy(x)
+        np.random.shuffle(x_random)
+
         x = torch.FloatTensor(x)
+        x_random = torch.FloatTensor(x_random)
 
         if self.USE_GPU:
             x = x.cuda()
+            x_random = x_random.cuda()
 
         r_target = self.r_target_net(x)
         r_pred = self.r_net(x)
-        r_gap = torch.mean(F.mse_loss(r_pred, r_target, reduction='none'), dim=1)
-        return r_gap.data.cpu().numpy()
+        gap_loss = torch.mean(F.mse_loss(r_pred, r_target, reduction='none'), dim=1)
+
+        r_target_random = self.r_target_net(x_random).detach()
+        r_pred_random = self.r_net(x_random)
+
+        xy = F.normalize(r_target, p=1, dim=1) * F.normalize(r_target_random, p=1, dim=1)
+        x_y_ = F.normalize(r_pred, p=1, dim=1) * F.normalize(r_pred_random, p=1, dim=1)
+        pair_wise_loss = torch.mean(F.mse_loss(xy, x_y_, reduction='none'), dim=1)
+        scores = gap_loss + pair_wise_loss
+        return scores.data.cpu().numpy()
 
     def eval_model_lesinn(self, x):
         self.r_net.eval()
