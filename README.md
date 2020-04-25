@@ -46,12 +46,56 @@ python test.py
 If you are under Server mode, the following scripts can be used to help you run experiments in batch
 
 ```
-python test.py [data/csv_file] [load_path] [tree_depth] [testing_method] > [output_log] 2>&1 &
+python test.py [data/csv_file] [load_path] [tree_depth] > [output_log] 2>&1 &
 ```
 
 e.g.
 
 ```
 python test.py data/apascal.csv save_model/apascal/ 8 1 > logs/apascal_l8_test.log 2>&1 &
+...
+```
+
+## Clustering
+
+### Train
+
+If you are under Dev mode (tweak it in train.py), just run
+
+```
+python train.py
+```
+
+If you are under Server mode, the following scripts can be used to help you run experiments in batch
+
+```
+python train.py [data] [batch_size] [out_c] > [output_log] 2>&1 &
+```
+
+e.g.
+
+```
+python train.py r8 192 512 > logs/r8_b192_[512].log 2>&1 &
+...
+```
+
+### Test
+
+If you are under Dev mode, just run
+
+```
+python test.py
+```
+
+If you are under Server mode, the following scripts can be used to help you run experiments in batch
+
+```
+python test.py [data] [batch_size] [out_c] > [output_log] 2>&1 &
+```
+
+e.g.
+
+```
+python test.py r8 192 512 > logs/r8_b192_[512]_test.log 2>&1 &
 ...
 ```
